@@ -14,6 +14,9 @@
 						<label>Проект</label>
 						<input type='text' v-model="projectText">
 					</div>
+					<div class="ui red inverted segment" v-if="errorMsg">
+						{{ errorMsg }}
+					</div>
 					<div class='ui two attached'>
 						<button class='ui basic blue button' @click="sendForm()">Создать</button>
 						<button class='ui basic red button' @click="closeForm">Закрыть</button>
@@ -29,6 +32,7 @@
 			return {
 				titleText: '',
 				projectText: '',
+				errorMsg: '',
 				isCreating: false
 			};
 		},
@@ -37,21 +41,28 @@
 				this.isCreating = true;
 			},
 			closeForm(){
+				this.errorMsg = '';
 				this.isCreating = false;
 			},
 			sendForm(){
-				if (this.titleText.length > 0 && this.projectText.length > 0) {
-					const title = this.titleText;
-					const project = this.projectText;
-					this.$emit('create-todo', {
-						title,
-						project,
-						done: false
-					});
-					this.titleText = '';
-					this.projectText = '';
-					this.isCreating = false;
+				if(this.titleText.length == 0) {
+					this.errorMsg = 'Введите название проекта'
+					return
 				}
+				if(this.projectText.length == 0) {
+					this.errorMsg = 'Введите описание проекта'
+					return
+				}
+				const title = this.titleText;
+				const project = this.projectText;
+				this.$emit('create-todo', {
+					title,
+					project,
+					done: false
+				});
+				this.titleText = '';
+				this.projectText = '';
+				this.errorMsg = '';
 				this.isCreating = false;
 			}
 		}

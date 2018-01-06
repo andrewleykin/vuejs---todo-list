@@ -22,6 +22,9 @@
 					<label>Проект</label>
 					<input type="text" v-model="todo.project">
 				</div>
+				<div class="ui red inverted segment" v-if="errorMsg">
+					{{ errorMsg }}
+				</div>
 				<div class="ui two button attached buttons">
 					<button class="ui basic blue button" @click="hideForm">Close X</button>
 				</div>
@@ -44,6 +47,7 @@
 		props: ['todo'],
 		data () {
 			return {
+				errorMsg: '',
 				isEditing: false
 			}
 		},
@@ -52,6 +56,15 @@
 				this.isEditing = true;
 			},
 			hideForm(){
+				if(this.todo.title.length == 0) {
+					this.errorMsg = 'Введите название проекта'
+					return
+				}
+				if(this.todo.project.length == 0) {
+					this.errorMsg = 'Введите описание проекта'
+					return
+				}
+				this.errorMsg = ''
 				this.isEditing = false;
 			},
 			deleteTodo(todo) {
